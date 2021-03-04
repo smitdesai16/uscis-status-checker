@@ -1,6 +1,7 @@
 package com.smitdesai16.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -13,19 +14,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
-    private static ListView lvStatus;
-    private static EditText etReceiptNumber;
-    private static Button btnAddInStatusChecker;
+    private ListView lvStatus;
+    private EditText etReceiptNumber;
+    private Button btnAddInStatusChecker;
+    private String SHARED_PREFERENCES_NAME = "USCSI";
+    private String SHARED_PREFERENCES_RECEIPT_SET = "MyReceipt";
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -43,8 +47,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         // todo open page with code
-        String clickedRestaurant = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(this, clickedRestaurant, Toast.LENGTH_SHORT).show();
+        String receiptNumber = adapterView.getItemAtPosition(i).toString();
+        Intent receiptActivity = new Intent(this, ReceiptActivity.class);
+        receiptActivity.putExtra("receipt", receiptNumber);
+        startActivity(receiptActivity);
     }
 
     @Override
@@ -66,31 +72,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private Set<String> GetReceiptsFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("userSettings", Context.MODE_PRIVATE);
-        return sharedPreferences.getStringSet("receiptNumbers", null);
+        return sharedPreferences.getStringSet(SHARED_PREFERENCES_RECEIPT_SET, null);
     }
 
     private void AddReceiptToSharedPreferences(String receipt) {
         if (receipt.equals("")) {
             return;
         }
-        SharedPreferences sharedPreferences = getSharedPreferences("userSettings", Context.MODE_PRIVATE);
         Set<String> receiptNumbers = GetReceiptsFromSharedPreferences();
         if (receiptNumbers == null) {
             receiptNumbers = new HashSet<String>();
         }
         receiptNumbers.add(receipt);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet("receiptNumbers", receiptNumbers);
+        editor.clear();
+        editor.putStringSet(SHARED_PREFERENCES_RECEIPT_SET, receiptNumbers);
         editor.apply();
     }
 
     private void DeleteReceiptFromSharedPreferences(String receipt) {
         Set<String> receipts = GetReceiptsFromSharedPreferences();
         receipts.remove(receipt);
-        SharedPreferences sharedPreferences = getSharedPreferences("userSettings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet("receiptNumbers", receipts);
+        editor.clear();
+        editor.remove(SHARED_PREFERENCES_RECEIPT_SET);
+        editor.apply();
+        editor.putStringSet(SHARED_PREFERENCES_RECEIPT_SET, receipts);
         editor.apply();
     }
 
