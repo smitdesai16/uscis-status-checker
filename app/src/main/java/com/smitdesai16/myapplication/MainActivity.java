@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        // todo open page with code
         String receiptNumber = adapterView.getItemAtPosition(i).toString();
         Intent receiptActivity = new Intent(this, ReceiptActivity.class);
         receiptActivity.putExtra("receipt", receiptNumber);

@@ -23,6 +23,8 @@ public class ReceiptActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         if(intent.hasExtra("receipt")) {
+            // todo make call
+            // todo set data in title and description
             tvTitle.setText(bundle.getString("receipt"));
         }
     }
