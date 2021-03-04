@@ -16,7 +16,7 @@ public class USCISService extends AsyncTask<String, String, String> {
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://egov.uscis.gov/casestatus/mycasestatus.do").newBuilder();
-        urlBuilder.addQueryParameter("appReceiptNum", "SRC2105450317");
+        urlBuilder.addQueryParameter("appReceiptNum", strings[0]);
 
         String url = urlBuilder.build().toString();
 
