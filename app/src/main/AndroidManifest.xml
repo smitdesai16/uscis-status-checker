@@ -14,7 +14,7 @@
         <activity android:name=".ReceiptActivity"></activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_name"
             android:theme="@style/Theme.USCISStatusChecker.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
